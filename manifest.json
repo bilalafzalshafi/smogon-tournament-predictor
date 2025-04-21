@@ -1,0 +1,20 @@
+{
+    "name": "Smogon Tournament Predictor",
+    "version": "1.0",
+    "description": "Make random predictions for Smogon tournaments and track history",
+    "permissions": ["activeTab", "storage", "https://www.smogon.com/*"],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": "icon.png"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://www.smogon.com/forums/form/*"],
+        "js": ["content.js"]
+      }
+    ],
+    "manifest_version": 3
+  }

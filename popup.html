@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smogon Predictor</title>
+  <style>
+    body {
+      width: 400px;
+      font-family: Arial, sans-serif;
+      padding: 10px;
+    }
+    h1 {
+      font-size: 18px;
+      margin-top: 0;
+    }
+    .tournament {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+    .tournament h2 {
+      font-size: 16px;
+      margin: 0 0 5px 0;
+    }
+    .date {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .matchup {
+      margin-bottom: 5px;
+    }
+    .prediction {
+      font-weight: bold;
+    }
+    .buttons {
+      margin-top: 15px;
+    }
+    button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      text-align: center;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button.secondary {
+      background-color: #f44336;
+    }
+    .no-data {
+      color: #666;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <h1>Smogon Tournament Predictions</h1>
+  <div id="history">
+    <p class="no-data">No prediction history found.</p>
+  </div>
+  <div class="buttons">
+    <button id="exportBtn">Export History</button>
+    <button id="clearBtn" class="secondary">Clear History</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
