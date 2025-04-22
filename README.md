@@ -28,4 +28,4 @@ A Chrome extension that helps Smogon users fill and save prediction forms for to
 
 ## License
 
-MIT License (or your license of choice)
+MIT License
