@@ -15,11 +15,6 @@ A Chrome extension that helps Smogon users fill and save prediction forms for to
 3. Enable "Developer mode" in the top-right corner
 4. Click "Load unpacked" and select the folder containing the extension
 
-### From ZIP File
-1. Download the latest release ZIP file
-2. Extract the ZIP file to a folder
-3. Follow steps 2-4 above
-
 ## Usage
 
 1. Navigate to a Smogon tournament prediction form
