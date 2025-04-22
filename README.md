@@ -6,7 +6,6 @@ A Chrome extension that helps Smogon users fill and save prediction forms for to
 
 - Automatically fill prediction forms with random picks
 - Download your predictions as a text file
-- Simple and lightweight
 
 ## Installation Instructions
 
