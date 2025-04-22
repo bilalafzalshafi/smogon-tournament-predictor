@@ -4,7 +4,7 @@
   <title>Smogon Predictor</title>
   <style>
     body {
-      width: 400px;
+      width: 300px;
       font-family: Arial, sans-serif;
       padding: 10px;
     }
@@ -12,66 +12,15 @@
       font-size: 18px;
       margin-top: 0;
     }
-    .tournament {
-      margin-bottom: 15px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 10px;
-    }
-    .tournament h2 {
-      font-size: 16px;
-      margin: 0 0 5px 0;
-    }
-    .date {
-      font-size: 12px;
-      color: #666;
-      margin-bottom: 8px;
-    }
-    .matchup {
-      margin-bottom: 5px;
-    }
-    .prediction {
-      font-weight: bold;
-    }
-    .buttons {
-      margin-top: 15px;
-    }
-    button {
-      background-color: #556677;  /* Sophisticated slate blue */
-      border: none;
-      color: white;
-      padding: 8px 16px;
-      text-align: center;
-      font-size: 14px;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: background-color 0.2s;
-    }
-
-    button:hover {
-      background-color: #445566;
-    }
-
-    button.secondary {
-      background-color: #777777;
-    }
-
-    button.secondary:hover {
-      background-color: #666666;
-    }
-    .no-data {
-      color: #666;
-      font-style: italic;
+    p {
+      margin: 10px 0;
     }
   </style>
 </head>
 <body>
-  <h1>Smogon Tournament Predictions</h1>
-  <div id="history">
-    <p class="no-data">No prediction history found.</p>
-  </div>
-  <div class="buttons">
-    <button id="exportBtn">Export History</button>
-    <button id="clearBtn" class="secondary">Clear History</button>
-  </div>
-  <script src="popup.js"></script>
+  <h1>Smogon Tournament Predictor</h1>
+  <p>Visit a Smogon tournament prediction form to use this extension.</p>
+  <p>Click "Fill Random Predictions" to randomly select winners.</p>
+  <p>Click "Save Predictions" to download your current picks.</p>
 </body>
+</html>

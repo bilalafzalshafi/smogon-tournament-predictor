@@ -198,13 +198,21 @@ function fillRandomPredictions() {
 
 function savePredictions() {
   // Get tournament information from URL
-  const tournamentId = window.location.href;
   let tournamentName = document.querySelector('h1, .p-title-value');
   tournamentName = tournamentName ? tournamentName.textContent.trim() : "Tournament Prediction";
   
+  // Get current date and time
+  const now = new Date();
+  const dateStr = now.toLocaleDateString();
+  const timeStr = now.toLocaleTimeString();
+  
+  // Start building the text content
+  let textContent = `${tournamentName}\n`;
+  textContent += `Predicted on: ${dateStr} ${timeStr}\n\n`;
+  
   // Collect all predictions
-  const predictions = [];
   const matchupRows = document.querySelectorAll('.formRow--input');
+  let hasPredictions = false;
   
   matchupRows.forEach((row, index) => {
     // Get radio buttons for this matchup
@@ -219,45 +227,56 @@ function savePredictions() {
       const selectedIndex = radioButtons[0].checked ? 0 : (radioButtons[1].checked ? 1 : -1);
       
       if (selectedIndex >= 0 && playerNames.length === 2) {
-        predictions.push({
-          player1: playerNames[0],
-          player2: playerNames[1],
-          winner: selectedIndex
-        });
+        hasPredictions = true;
+        // Format: Player1 vs. Player2 (with winner marked with *)
+        if (selectedIndex === 0) {
+          textContent += `${playerNames[0]}* vs. ${playerNames[1]}\n`;
+        } else {
+          textContent += `${playerNames[0]} vs. ${playerNames[1]}*\n`;
+        }
       }
     }
   });
   
-  // Save to extension storage
-  chrome.storage.local.get('predictionHistory', function(data) {
-    const history = data.predictionHistory || {};
-    
-    history[tournamentId] = {
-      name: tournamentName,
-      date: new Date().toISOString(),
-      predictions: predictions
-    };
-    
-    chrome.storage.local.set({ 'predictionHistory': history }, function() {
-      // Show a success message
-      const msg = document.createElement('div');
-      msg.textContent = 'Predictions saved!';
-      msg.className = 'message message--success';
-      msg.style.marginBottom = '10px';
-      
-      // Add to page
-      const saveContainer = document.querySelector('.smogon-predictor-save');
-      if (saveContainer) {
-        saveContainer.parentNode.insertBefore(msg, saveContainer);
-      } else {
-        const form = document.querySelector('form');
-        if (form) form.appendChild(msg);
-      }
-      
-      // Remove after 3 seconds
-      setTimeout(() => {
-        msg.remove();
-      }, 3000);
-    });
-  });
+  if (!hasPredictions) {
+    alert("No predictions found. Please make some predictions first.");
+    return;
+  }
+  
+  // Create a download link
+  const blob = new Blob([textContent], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  
+  // Create a temporary link and trigger download
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${tournamentName.replace(/[^a-z0-9]/gi, '_')}_predictions.txt`;
+  document.body.appendChild(a);
+  a.click();
+  
+  // Clean up
+  setTimeout(() => {
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 0);
+  
+  // Show a success message
+  const msg = document.createElement('div');
+  msg.textContent = 'Predictions downloaded!';
+  msg.className = 'message message--success';
+  msg.style.marginBottom = '10px';
+  
+  // Add to page
+  const saveContainer = document.querySelector('.smogon-predictor-save');
+  if (saveContainer) {
+    saveContainer.parentNode.insertBefore(msg, saveContainer);
+  } else {
+    const form = document.querySelector('form');
+    if (form) form.appendChild(msg);
+  }
+  
+  // Remove after 3 seconds
+  setTimeout(() => {
+    msg.remove();
+  }, 3000);
 }

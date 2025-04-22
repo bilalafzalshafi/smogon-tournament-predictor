@@ -1,8 +1,8 @@
 {
   "name": "Smogon Tournament Predictor",
   "version": "1.0",
-  "description": "Make random predictions for Smogon tournaments and track history",
-  "permissions": ["activeTab", "storage"],
+  "description": "Make random predictions for Smogon tournaments and download them",
+  "permissions": ["activeTab"],
   "host_permissions": ["https://www.smogon.com/*"],
   "background": {
     "service_worker": "background.js"
@@ -13,7 +13,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.smogon.com/forums/*"],
+      "matches": ["https://www.smogon.com/*"],
       "js": ["content.js"]
     }
   ],
