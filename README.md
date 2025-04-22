@@ -25,7 +25,3 @@ A Chrome extension that helps Smogon users fill and save prediction forms for to
 1. Navigate to a Smogon tournament prediction form
 2. Click "Fill Random Predictions" to randomly select winners
 3. Click "Save Predictions" to download your selections as a text file
-
-## License
-
-MIT License
