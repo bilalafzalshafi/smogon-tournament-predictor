@@ -36,7 +36,7 @@
       margin-top: 15px;
     }
     button {
-      background-color: #4CAF50;
+      background-color: #556677;  /* Sophisticated slate blue */
       border: none;
       color: white;
       padding: 8px 16px;
@@ -44,9 +44,19 @@
       font-size: 14px;
       cursor: pointer;
       border-radius: 4px;
+      transition: background-color 0.2s;
     }
+
+    button:hover {
+      background-color: #445566;
+    }
+
     button.secondary {
-      background-color: #f44336;
+      background-color: #777777;
+    }
+
+    button.secondary:hover {
+      background-color: #666666;
     }
     .no-data {
       color: #666;
