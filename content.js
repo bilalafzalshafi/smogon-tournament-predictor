@@ -69,53 +69,41 @@ function isPredictionForm() {
 function addPredictionButtons() {
   console.log("Attempting to add prediction buttons");
   
-  // Try multiple possible selectors for the submit row
-  const submitRowSelectors = [
-    '.formSubmitRow', 
-    '.formRow.formSubmitRow', 
-    '.formSubmitRow--sticky',
-    '.formRow.formSubmitRow--sticky',
-    'dl.formSubmitRow',
-    'dl.formRow.formSubmitRow',
-    '.formRow:last-child',
-    'form .block-outer:last-child',
-    'form .formRow:last-of-type'
-  ];
+  // Find the form element more reliably
+  const form = document.querySelector('form[data-xf-init*="ajax-submit"]');
   
-  let submitRow = null;
-  for (const selector of submitRowSelectors) {
-    submitRow = document.querySelector(selector);
-    if (submitRow) {
-      console.log("Found submit row with selector: " + selector);
-      break;
+  if (!form) {
+    console.error("Form not found - trying alternative selectors");
+    // Try alternative approaches to find the form
+    const alternativeForms = document.querySelectorAll('form');
+    if (alternativeForms.length > 0) {
+      console.log("Found form with alternative selector");
+      addButtonsToForm(alternativeForms[0]);
+    } else {
+      console.error("No forms found on the page");
     }
+    return;
   }
   
-  // If we still can't find it, try the last form row
-  if (!submitRow) {
-    const formRows = document.querySelectorAll('.formRow');
-    if (formRows.length > 0) {
-      submitRow = formRows[formRows.length - 1];
-      console.log("Using last form row as submit row");
-    }
+  addButtonsToForm(form);
+}
+
+function addButtonsToForm(form) {
+  // Find the block-body container
+  const blockBody = form.querySelector('.block-body');
+  const container = blockBody || form;
+  
+  // Find the first form row to insert before
+  const firstFormRow = container.querySelector('.formRow');
+  if (!firstFormRow) {
+    console.error("No form rows found");
+    return;
   }
   
-  if (!submitRow) {
-    console.error("Submit row not found - trying form directly");
-    submitRow = document.querySelector('form');
-    if (!submitRow) {
-      console.error("Form not found either - cannot add buttons");
-      return;
-    }
-  }
-  
-  // Create our button container
-  const buttonContainer = document.createElement('div');
-  buttonContainer.className = 'smogon-predictor-buttons';
-  buttonContainer.style.marginBottom = '10px';
-  buttonContainer.style.padding = '10px';
-  buttonContainer.style.background = '#f0f0f0';
-  buttonContainer.style.borderRadius = '4px';
+  // Create random prediction button container
+  const randomContainer = document.createElement('div');
+  randomContainer.className = 'formRow smogon-predictor-random';
+  randomContainer.style.marginBottom = '15px';
   
   // Random prediction button
   const randomButton = document.createElement('button');
@@ -124,6 +112,46 @@ function addPredictionButtons() {
   randomButton.type = 'button'; // Prevent form submission
   randomButton.addEventListener('click', fillRandomPredictions);
   
+  // Add random button to container
+  randomContainer.appendChild(randomButton);
+  
+  // Insert at the top of the form content
+  container.insertBefore(randomContainer, firstFormRow);
+  
+  // Find the submit row for the save button
+  const submitButton = form.querySelector('button[type="submit"]');
+  let submitRow = null;
+  
+  if (submitButton) {
+    // Get the parent of the submit button
+    submitRow = submitButton.closest('.formRow') || submitButton.parentNode;
+  } else {
+    // Try common selectors
+    const selectors = ['.formSubmitRow', '.formRow:last-child'];
+    for (const selector of selectors) {
+      submitRow = form.querySelector(selector);
+      if (submitRow) break;
+    }
+    
+    // If still not found, use the last form row
+    if (!submitRow) {
+      const allRows = form.querySelectorAll('.formRow');
+      if (allRows.length > 0) {
+        submitRow = allRows[allRows.length - 1];
+      }
+    }
+  }
+  
+  if (!submitRow) {
+    console.error("Submit row not found - using form for save button");
+    submitRow = form;
+  }
+  
+  // Create save button container
+  const saveContainer = document.createElement('div');
+  saveContainer.className = 'smogon-predictor-save';
+  saveContainer.style.marginTop = '10px';
+  
   // Save button
   const saveButton = document.createElement('button');
   saveButton.textContent = 'Save Predictions';
@@ -131,27 +159,19 @@ function addPredictionButtons() {
   saveButton.type = 'button'; // Prevent form submission
   saveButton.addEventListener('click', savePredictions);
   
-  // Add buttons to container
-  buttonContainer.appendChild(randomButton);
-  buttonContainer.appendChild(document.createTextNode(' '));
-  buttonContainer.appendChild(saveButton);
+  // Add save button to container
+  saveContainer.appendChild(saveButton);
   
-  // Try different insertion methods depending on what we found
-  try {
-    if (submitRow.tagName === 'FORM') {
-      // If we're using the form, prepend to it
-      submitRow.prepend(buttonContainer);
-    } else {
-      // Insert before the submit row
-      submitRow.parentNode.insertBefore(buttonContainer, submitRow);
-    }
-    console.log("Successfully added prediction buttons");
-  } catch (error) {
-    console.error("Error adding buttons:", error);
-    // Last resort - append to body
-    document.body.appendChild(buttonContainer);
-    console.log("Buttons added to body as fallback");
+  // Add the save button
+  if (submitRow === form) {
+    // Append to the end of the form
+    form.appendChild(saveContainer);
+  } else {
+    // Insert before the submit row
+    submitRow.parentNode.insertBefore(saveContainer, submitRow);
   }
+  
+  console.log("Successfully added prediction buttons");
 }
 
 function fillRandomPredictions() {
@@ -187,23 +207,24 @@ function savePredictions() {
   const matchupRows = document.querySelectorAll('.formRow--input');
   
   matchupRows.forEach((row, index) => {
-    // Try to get matchup information
+    // Get radio buttons for this matchup
     const radioButtons = row.querySelectorAll('input[type="radio"]');
     
     if (radioButtons.length === 2) {
-      // Get player names from labels
-      const labels = row.querySelectorAll('label');
-      const playerNames = Array.from(labels).map(label => label.textContent.trim());
+      // Get player names from the label spans
+      const playerLabels = row.querySelectorAll('.iconic-label');
+      const playerNames = Array.from(playerLabels).map(label => label.textContent.trim());
       
       // Get selected choice
       const selectedIndex = radioButtons[0].checked ? 0 : (radioButtons[1].checked ? 1 : -1);
       
-      predictions.push({
-        matchup: `Match ${index + 1}`,
-        player1: playerNames[0] || "Player 1",
-        player2: playerNames[1] || "Player 2",
-        prediction: selectedIndex >= 0 ? playerNames[selectedIndex] : "No selection"
-      });
+      if (selectedIndex >= 0 && playerNames.length === 2) {
+        predictions.push({
+          player1: playerNames[0],
+          player2: playerNames[1],
+          winner: selectedIndex
+        });
+      }
     }
   });
   
@@ -225,8 +246,13 @@ function savePredictions() {
       msg.style.marginBottom = '10px';
       
       // Add to page
-      const buttonContainer = document.querySelector('.smogon-predictor-buttons');
-      buttonContainer.parentNode.insertBefore(msg, buttonContainer);
+      const saveContainer = document.querySelector('.smogon-predictor-save');
+      if (saveContainer) {
+        saveContainer.parentNode.insertBefore(msg, saveContainer);
+      } else {
+        const form = document.querySelector('form');
+        if (form) form.appendChild(msg);
+      }
       
       // Remove after 3 seconds
       setTimeout(() => {
