@@ -1,4 +1,4 @@
-# Smogon Tournament Predictor
+# The Ape
 
 A Chrome extension that helps Smogon users fill and save prediction forms for tournaments.
 

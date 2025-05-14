@@ -1,5 +1,5 @@
 {
-  "name": "Smogon Tournament Predictor",
+  "name": "The Ape",
   "version": "1.0",
   "description": "Make random predictions for Smogon tournaments and download them",
   "permissions": ["activeTab"],
