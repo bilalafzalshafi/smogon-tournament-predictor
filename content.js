@@ -230,9 +230,9 @@ function savePredictions() {
         hasPredictions = true;
         // Format: Player1 vs. Player2 (with winner marked with *)
         if (selectedIndex === 0) {
-          textContent += `**${playerNames[0]}** vs. ${playerNames[1]}\n`;
+          textContent += `[B]${playerNames[0]}[/B] vs. ${playerNames[1]}\n`;
         } else {
-          textContent += `${playerNames[0]} vs. **${playerNames[1]}**\n`;
+          textContent += `${playerNames[0]} vs. [B]${playerNames[1]}[/B]\n`;
         }
       }
     }
