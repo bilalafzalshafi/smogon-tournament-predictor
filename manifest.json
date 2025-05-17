@@ -2,7 +2,7 @@
   "name": "The Ape",
   "version": "1.0",
   "description": "Make random predictions for Smogon tournaments and download them",
-  "permissions": ["activeTab"],
+  "permissions": [],
   "host_permissions": ["https://www.smogon.com/*"],
   "background": {
     "service_worker": "background.js"
